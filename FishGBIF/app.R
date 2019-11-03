@@ -17,18 +17,18 @@ fish <- read_tsv('../data/0036070-190918142434337.csv')
 ui <- fluidPage(
 
     # Application title
-    titlePanel("Fisheries Data"),
+    titlePanel("Fisheries Bycatch Data"),
 
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
         sidebarPanel(
-           selectInput("species","Fish Species", sort(unique(fish$species))) 
+           selectInput("species","Bycatch Species", sort(unique(fish$species))) 
            )
         ,
 
         # Show a plot of the generated distribution
         mainPanel(
-           leafletOutput("nzmap")
+           leafletOutput("nzmap", width="100%", height="800px")
         )
     )
 )
@@ -37,10 +37,11 @@ ui <- fluidPage(
 server <- function(input, output) {
 
     output$nzmap <- renderLeaflet({
+        
         leaflet(options=leafletOptions(worldCopyJump=TRUE)) %>%
-            setView(173.0,-41.0, zoom=5) %>%
-            addProviderTiles(providers$Stamen.Terrain,
-                             options = providerTileOptions(noWrap = TRUE)
+            setView(173.0,-41.0, zoom=6) %>%
+            addProviderTiles(providers$Esri.OceanBasemap,
+                             options = providerTileOptions()
             )
         
     })
