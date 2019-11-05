@@ -11,7 +11,7 @@ library(shiny)
 library(leaflet)
 library(tidyverse)
 
-bycatch <- read_tsv('../data/0036070-190918142434337.csv')
+bycatch <- read_tsv('../data/0036070-190918142434337.csv.gz')
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
