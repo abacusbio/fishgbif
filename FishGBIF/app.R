@@ -11,7 +11,7 @@ library(shiny)
 library(leaflet)
 library(tidyverse)
 
-fish <- read_tsv('../data/0036070-190918142434337.csv')
+bycatch <- read_tsv('../data/0036070-190918142434337.csv')
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -22,7 +22,15 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
         sidebarPanel(
-           selectInput("species","Bycatch Species", sort(unique(fish$species))) 
+           selectInput("species",
+                       "Bycatch Species", 
+                       sort(unique(bycatch$species))) ,
+           sliderInput("years",
+                       "Year Range", 
+                       min = min(bycatch$year), 
+                       max=max(bycatch$year), 
+                       value=c( min(bycatch$year),max(bycatch$year) ), 
+                       dragRange = TRUE,sep = "") 
            )
         ,
 
@@ -48,8 +56,9 @@ server <- function(input, output) {
     
     observe({
         selected <-
-            fish %>% 
+            bycatch %>% 
             filter(species == input$species) %>% 
+            filter(year >= input$years[1], year <= input$years[2]) %>%
             select(decimalLatitude, decimalLongitude)
         
         leafletProxy("nzmap") %>% clearMarkers() %>%  clearShapes()  %>% addCircles(lat = selected$decimalLatitude,
